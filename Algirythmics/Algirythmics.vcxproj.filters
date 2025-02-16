@@ -15,10 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Algirythmics.cpp">
+    <ClCompile Include="List.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="BinaryTree.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\home1\Downloads\Telegram Desktop\CircularList.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

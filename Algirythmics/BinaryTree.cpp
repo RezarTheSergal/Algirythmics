@@ -4,15 +4,10 @@ using namespace std;
 
 struct Node {
     int data;
-    Node* left;
-    Node* right;
+    Node* left = nullptr;
+    Node* right = nullptr;
 
-    Node(int value) 
-    {
-        this->data = value;
-        this->left = nullptr;
-        this->right = nullptr;
-    }
+    Node(int value) : data(value) {}
 };
 
 class BinarySearchTree {
@@ -103,7 +98,7 @@ public:
     // Симметричный обход
     void inorderTraversal() {
         inorderTraversal(root);
-        std::cout << std::endl;
+        cout << endl;
     }
 
     int height() {
@@ -119,9 +114,9 @@ public:
     }
 };
 
-int main() {
+int qwemain() {
     srand(time(0));
-    BinarySearchTree bst;
+    BinarySearchTree* bst = new BinarySearchTree();
 
     int n;
     cout << "Enter number of tree's elements: ";
@@ -129,18 +124,18 @@ int main() {
 
     for (int i = 0; i < n; ++i) {
         int value = rand() % 100 + 1;
-        bst.insert(value);
+        bst->insert(value);
     }
 
     cout << "Inorder Traversal: ";
-    bst.inorderTraversal();
+    bst->inorderTraversal();
 
-    cout << "Tree Height: " << bst.height() << endl;
+    cout << "Tree Height: " << bst->height() << endl;
 
     int valueToSearch;
     cout << "Enter element to find: ";
     cin >> valueToSearch;
-    if (bst.search(valueToSearch)) {
+    if (bst->search(valueToSearch)) {
         cout << "Found!" << endl;
     }
     else {
@@ -150,9 +145,10 @@ int main() {
     int valueToDelete;
     cout << "Enter elem to destroy: ";
     cin >> valueToDelete;
-    bst.deleteNode(valueToDelete);
+    bst->deleteNode(valueToDelete);
     cout << "Inorder Traversal after deletion: ";
-    bst.inorderTraversal();
+    bst->inorderTraversal();
 
+    delete bst;
     return 0;
 }
