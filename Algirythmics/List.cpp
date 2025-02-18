@@ -12,24 +12,35 @@ template<typename T>
 class List
 {
 public:
-    Node<T>* head_ref = NULL;
+    Node<T>* headRef = NULL;
 
     List(Node<T>* node = NULL)
     {
-        this->head_ref = node;
+        this->headRef = node;
+    }
+
+    ~List() {
+        if (!this->headRef) return;
+
+        Node<T>* current = this->headRef;
+        Node<T>* nextNode;
+        do {
+            nextNode = current->next;
+            delete current;
+            current = nextNode;
+        } while (current != nullptr);
     }
 
     void append(T new_data) 
     {
         Node<T>* new_node = new Node<T>();
-        Node<T>* last = this->head_ref;
+        Node<T>* last = this->headRef;
         new_node->data = new_data;
-        if (this->head_ref == NULL)
+        if (this->headRef == NULL)
         {
-            this->head_ref = new Node<T>();
-            this->head_ref->data = new_data;
-            this->head_ref->next = new_node;
-            this->count++;
+            this->headRef = new Node<T>();
+            this->headRef->data = new_data;
+            this->headRef->next = new_node;
             return;
         }
 
@@ -39,13 +50,17 @@ public:
         }
         last->next = new_node;
 
-        this->count++;
         return;
     }
 
     void display() 
     {
-        Node<T>* temp = this->head_ref;
+        if (this->headRef == nullptr)
+        {
+            cout << "Empty";
+            return;
+        }
+        Node<T>* temp = this->headRef;
         bool nfirst = false;
         while (temp != NULL)
         {
@@ -63,36 +78,27 @@ public:
         cout << endl;
         return;
     }
-
-    void displayCount()
-    {
-        cout << this->count << endl;
-        return;
-    }
-
-private:
-    int count = 0;
 };
 
 
 void separateListByX(List<int>* base, int x, List<int>*& lower, List<int>*& greater)
 {   
-    Node<int>* temp = base->head_ref->next;
-    Node<int>* last = base->head_ref;
+    Node<int>* temp = base->headRef->next;
+    Node<int>* last = base->headRef;
 
     while (temp != nullptr)
     {
         if (temp->data < x)
         {
-            if (lower->head_ref == NULL)
+            if (lower->headRef == NULL)
             {
-                lower->head_ref = temp;
+                lower->headRef = temp;
                 last->next = last->next->next;
-                lower->head_ref->next = nullptr;
+                lower->headRef->next = nullptr;
             }
             else
             {
-                Node<int>* tmpl = lower->head_ref;
+                Node<int>* tmpl = lower->headRef;
                 while (tmpl->next != nullptr)
                 {
                     tmpl = tmpl->next;
@@ -105,15 +111,15 @@ void separateListByX(List<int>* base, int x, List<int>*& lower, List<int>*& grea
         }
         else
         {
-            if (greater->head_ref == NULL)
+            if (greater->headRef == NULL)
             {
-                greater->head_ref = temp;
+                greater->headRef = temp;
                 last->next = last->next->next;
-                greater->head_ref->next = nullptr;
+                greater->headRef->next = nullptr;
             }
             else
             {
-                Node<int>* tmpg = greater->head_ref;
+                Node<int>* tmpg = greater->headRef;
                 while (tmpg->next != nullptr)
                 {
                     tmpg = tmpg->next;
