@@ -127,10 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CDLList.cpp" />
     <ClCompile Include="CircularList.cpp" />
     <ClCompile Include="Hare.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="BinaryTree.cpp" />
+    <ClCompile Include="PhoneBook.cpp" />
+    <ClCompile Include="SegmentTree.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

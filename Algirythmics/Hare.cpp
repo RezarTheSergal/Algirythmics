@@ -4,67 +4,56 @@ using namespace std;
 
 struct Node {
     int data;
+    Node* prev;
     Node* next;
 
-    Node(int value = NULL, Node* nt = nullptr) : data(value), next(nt) {}
+    Node(int value = NULL, Node* nt = nullptr, Node* pr = nullptr) : data(value), next(nt), prev(pr) {}
 };
+
 
 class List {
 private:
     Node* headRef = nullptr;
 
 public:
-    ~List() {
-        Node* current = headRef;
-        while (current) {
-            Node* nextNode = current->next;
-            delete current;
-            current = nextNode;
-        }
-    }
-
-    void append(int value) {
-        Node* newNode = new Node(value);
-        if (headRef == nullptr) {
+    void append(int val) {
+        Node* newNode = new Node(val);
+        if (!headRef) {
             headRef = newNode;
         }
         else {
-            Node* current = headRef;
-            while (current->next) {
-                current = current->next;
+            Node* temp = headRef;
+            while (temp->next) {
+                temp = temp->next;
             }
-            current->next = newNode;
+            temp->next = newNode;
+            newNode->prev = temp;
         }
     }
 
-    void setSkip(int fromValue, int toValue) {
+    void createSkip(int from, int to) {
         Node* fromNode = nullptr;
         Node* toNode = nullptr;
-        Node* current = headRef;
+        Node* temp = headRef;
 
-        while (current != nullptr) {
-            if (current->data == fromValue) {
-                fromNode = current;
-            }
-            if (current->data == toValue) {
-                toNode = current;
-            }
-            if (fromNode != nullptr && toNode != nullptr) break;
-            current = current->next;
+        while (temp) {
+            if (temp->data == from) fromNode = temp;
+            if (temp->data == to) toNode = temp;
+            temp = temp->next;
         }
 
-        if (fromNode != nullptr && toNode != nullptr) {
+        if (fromNode && toNode) {
             fromNode->next = toNode;
         }
     }
 
-    bool hasSkips() const {
+    bool hasLoops() {
         if (!headRef || !headRef->next) return false;
 
         Node* turtle = headRef;
         Node* hare = headRef;
 
-        while (hare != nullptr && hare->next  != nullptr) {
+        while (hare && hare->next) {
             turtle = turtle->next;
             hare = hare->next->next;
 
@@ -76,30 +65,53 @@ public:
         return false;
     }
 
-    void print() const {
+    bool hasJumps() {
+        if (!headRef || !headRef->next) return false;
+
         Node* current = headRef;
-        while (current) {
-            cout << current->data << " ";
+        while (current->next) {
+            if (current->next->prev != current) {
+                return true;
+            }
             current = current->next;
         }
-        cout << endl;
+
+        return false;
+    }
+
+    void display() {
+        Node* temp = headRef;
+        while (temp) {
+            cout << temp->data << " <-> ";
+            temp = temp->next;
+        }
+        cout << "NULL" << endl;
+    }
+
+    ~List() {
+        Node* temp;
+        while (headRef) {
+            temp = headRef;
+            headRef = headRef->next;
+            exit(temp->data);
+            delete temp;
+        }
     }
 };
 
-int main() {
-
+int rtymain() {
     List* list = new List();
 
-    for (int i = 1; i < 6; i++) list->append(i);
+    for (int i = 1; i <= 5; ++i) list->append(i);
 
-    // Before skip
-    list->print();
+    list->display();
 
-    cout << (list->hasSkips() ? "Yes" : "No") << endl;
+    list->createSkip(4, 1);
 
-    list->setSkip(3, 1);
-    // After skip
-    cout << (list->hasSkips() ? "Yes" : "No") << endl;
-    // Funni function
-    quick_exit(0);
+    cout << (list->hasLoops() ? "Yes" : "No") << endl;
+
+    cout << (list->hasJumps() ? "Yes" : "No") << endl;
+    
+    delete list;
+    return 0;
 }

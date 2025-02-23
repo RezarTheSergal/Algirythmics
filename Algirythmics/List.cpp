@@ -57,7 +57,7 @@ public:
     {
         if (this->headRef == nullptr)
         {
-            cout << "Empty";
+            cout << "NULL";
             return;
         }
         Node<T>* temp = this->headRef;
@@ -140,21 +140,11 @@ int asdmain()
     int x;
     cin >> x;
     List<int>* based = new List<int>();
-    based->append(9);
-    based->append(3);
-    based->append(6);
-    based->append(8);
-    based->append(13);
-    based->append(6);
-    based->append(9);
-    based->append(33);
-    based->append(6);
-    based->append(2);
-    based->append(5);
-    based->append(2);
-    based->append(12);
-    based->append(4);
-    based->append(10);
+    for (int i = 1; i < 10; i++)
+    {
+        based->append(i-1);
+        based->append(10-i);
+    }
 
     List<int>* lowerValues = new List<int>();
     List<int>* greaterValues = new List<int>();
