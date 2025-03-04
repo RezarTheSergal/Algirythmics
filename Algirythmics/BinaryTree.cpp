@@ -14,6 +14,14 @@ class BinarySearchTree {
 private:
     Node* root = nullptr;
 
+    void clear(Node* node) {
+        if (!node) return;
+
+        clear(node->left);
+        clear(node->right);
+        delete node;
+    }
+
     Node* insert(Node* node, int value) {
         if (node == nullptr) {
             return new Node(value);
@@ -75,14 +83,14 @@ private:
                 delete node;
                 return temp;
             }
-            Node* temp = minValueNode(node->right);
+            Node* temp = findMin(node->right);
             node->data = temp->data;
             node->right = deleteNode(node->right, temp->data);
         }
         return node;
     }
 
-    Node* minValueNode(Node* node) {
+    Node* findMin(Node* node) {
         Node* current = node;
         while (current && current->left != nullptr) {
             current = current->left;
@@ -91,6 +99,10 @@ private:
     }
 
 public:
+    ~BinarySearchTree() {
+        clear(root);
+    }
+
     void insert(int value) {
         root = insert(root, value);
     }
@@ -114,7 +126,7 @@ public:
     }
 };
 
-int qwemain() {
+int gfhdsadsmain() {
     srand(time(0));
     BinarySearchTree* bst = new BinarySearchTree();
 

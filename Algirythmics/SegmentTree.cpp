@@ -1,107 +1,91 @@
 #include <iostream>
 
-// Структура узла дерева отрезков
-struct Node {
-    int l, r; // Интервал [l, r]
-    Node* left;
-    Node* right;
+using namespace std;
 
-    Node(int l, int r) : l(l), r(r), left(nullptr), right(nullptr) {}
+struct Node {
+    int l, r;
+    Node* left = nullptr;
+    Node* right = nullptr;
+
+    Node(int l, int r) : l(l), r(r) {}
 };
 
-// Класс для работы с деревом отрезков
 class SegmentTree {
 private:
     Node* root;
 
-    // Рекурсивное построение дерева отрезков
     Node* buildTree(int l, int r) {
         if (l > r) return nullptr;
 
         Node* node = new Node(l, r);
 
-        if (l != r) {
+        if (r-l > 1) {
             int mid = (l + r) / 2;
             node->left = buildTree(l, mid);
-            node->right = buildTree(mid + 1, r);
+            node->right = buildTree(mid, r);
         }
 
         return node;
     }
 
-    // Прямой обход дерева (preorder traversal)
-    void preorderTraversal(Node* node) {
+    void inorder(Node* node) {
         if (!node) return;
 
-        std::cout << "[" << node->l << ", " << node->r << "] ";
-        preorderTraversal(node->left);
-        preorderTraversal(node->right);
+        inorder(node->left);
+        cout << "[" << node->l << ", " << node->r << "] ";
+        inorder(node->right);
     }
 
-    // Подсчёт количества интервалов, содержащих точку X
-    int countIntervalsContainingX(Node* node, int X) {
+    int countIntervalsContainingX(Node* node, int x) {
         if (!node) return 0;
 
-        // Если текущий интервал не содержит X, возвращаем 0
-        if (X < node->l || X > node->r) {
+        if (x < node->l || x > node->r) {
             return 0;
         }
 
-        // Если текущий интервал содержит X, добавляем 1 и проверяем детей
-        return 1 + countIntervalsContainingX(node->left, X) + countIntervalsContainingX(node->right, X);
+        return 1 + countIntervalsContainingX(node->left, x) + countIntervalsContainingX(node->right, x);
+    }
+
+    void clear(Node* node) {
+        if (!node) return;
+
+        clear(node->left);
+        clear(node->right);
+        delete node;
     }
 
 public:
-    // Конструктор
     SegmentTree(int l, int r) {
         root = buildTree(l, r);
     }
 
-    // Деструктор (рекурсивное удаление дерева)
     ~SegmentTree() {
-        deleteTree(root);
+        clear(root);
     }
 
-    // Рекурсивное удаление дерева
-    void deleteTree(Node* node) {
-        if (!node) return;
-
-        deleteTree(node->left);
-        deleteTree(node->right);
-        delete node;
+    void inorderTraversal() {
+        inorder(root);
+        cout << endl;
     }
 
-    // Прямой обход и печать интервалов
-    void printTree() {
-        std::cout << "Preorder traversal of the segment tree:\n";
-        preorderTraversal(root);
-        std::cout << "\n";
-    }
-
-    // Подсчёт количества интервалов, содержащих точку X
-    int countIntervals(int X) {
-        return countIntervalsContainingX(root, X);
+    int countIntervals(int x) {
+        return countIntervalsContainingX(root, x);
     }
 };
 
-int main() {
-    int l, r;
-    std::cout << "Enter the range for the segment tree [l, r]: ";
-    std::cin >> l >> r;
+int dfghmain() {
+    int l, r, x, count;
+    cout << "Enter the range for the segment tree: ";
+    cin >> l >> r;
 
-    // Создание дерева отрезков
-    SegmentTree tree(l, r);
+    SegmentTree* tree = new SegmentTree(l, r);
 
-    // Прямой обход и печать интервалов
-    tree.printTree();
+    tree->inorderTraversal();
+    cout << "Enter a point X to count intervals containing it: ";
+    cin >> x;
 
-    // Подсчёт количества интервалов, содержащих точку X
-    int X;
-    std::cout << "Enter a point X to count intervals containing it: ";
-    std::cin >> X;
-
-    int count = tree.countIntervals(X);
-    std::cout << "Number of intervals containing " << X << ": " << count << "\n";
+    count = tree->countIntervals(x);
+    cout << "Number of intervals containing " << x << ": " << count << endl;
 
     return 0;
 }

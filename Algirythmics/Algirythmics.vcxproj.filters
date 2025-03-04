@@ -13,28 +13,40 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\First">
+      <UniqueIdentifier>{a6ae48d9-a1da-4362-ba06-ecb174876904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Second">
+      <UniqueIdentifier>{bdbab4f9-e27a-4778-9dc4-90ad5920e896}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="List.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="BinaryTree.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="SegmentTree.cpp">
+      <Filter>Исходные файлы\First</Filter>
     </ClCompile>
     <ClCompile Include="CircularList.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\First</Filter>
     </ClCompile>
     <ClCompile Include="Hare.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\First</Filter>
     </ClCompile>
-    <ClCompile Include="CDLList.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="List.cpp">
+      <Filter>Исходные файлы\First</Filter>
     </ClCompile>
     <ClCompile Include="PhoneBook.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\First</Filter>
     </ClCompile>
-    <ClCompile Include="SegmentTree.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="BinaryTree.cpp">
+      <Filter>Исходные файлы\First</Filter>
+    </ClCompile>
+    <ClCompile Include="CDLList.cpp">
+      <Filter>Исходные файлы\First</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryBalanceTree.cpp">
+      <Filter>Исходные файлы\Second</Filter>
+    </ClCompile>
+    <ClCompile Include="AVLTree.cpp">
+      <Filter>Исходные файлы\Second</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

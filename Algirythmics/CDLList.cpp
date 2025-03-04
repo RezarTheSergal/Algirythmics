@@ -15,18 +15,17 @@ private:
     Node* headRef = nullptr;
 
 public:
-    void append(int val) {
-        Node* newNode = new Node(val);
-        if (!headRef) {
-            headRef = newNode;
+    void append(int value) {
+        if (headRef == nullptr) {
+            headRef = new Node(value);
             headRef->next = headRef;
             headRef->prev = headRef;
         }
         else {
+
             Node* tail = headRef->prev;
+            Node* newNode = new Node(value, headRef, tail);
             tail->next = newNode;
-            newNode->prev = tail;
-            newNode->next = headRef;
             headRef->prev = newNode;
         }
     }
@@ -52,31 +51,28 @@ public:
         } while (current != headRef);
     }
 
-    void remove(int val) {
-        if (!headRef) return;
+    void remove(int value) {
+        if (headRef == nullptr) return;
 
         Node* current = headRef;
         do {
-            if (current->data == val) {
-                if (current->next == current) { // Lonely node :<
-                    delete current;
+            if (current->data == value) {
+                if (current == headRef && headRef->next == headRef) {
+                    // If it's the only element left
+                    delete headRef;
                     headRef = nullptr;
+                    return;
                 }
-                else {
-                    current->prev->next = current->next;
-                    current->next->prev = current->prev;
-                    // Updating head, if first node is deleted
-                    if (current == headRef) {
-                        headRef = current->next; 
-                    }
-                    delete current;
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
+                if (current == headRef) {
+                    headRef = headRef->next;
                 }
+                delete current;
                 return;
             }
             current = current->next;
         } while (current != headRef);
-
-        cout << "I refuse to elaborate" << endl;
     }
 
     int countNodes() {
@@ -136,7 +132,7 @@ public:
     }
 };
 
-int main() {
+int ghhhjmain() {
     CDLList* list = new CDLList();
 
     for (int i = 1; i < 6; i++) list->append(i);

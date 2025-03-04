@@ -31,6 +31,16 @@ public:
         }
     }
 
+    ~List() {
+        Node* temp;
+        while (headRef) {
+            temp = headRef;
+            headRef = headRef->next;
+            exit(temp->data);
+            delete temp;
+        }
+    }
+
     void createSkip(int from, int to) {
         Node* fromNode = nullptr;
         Node* toNode = nullptr;
@@ -88,30 +98,21 @@ public:
         cout << "NULL" << endl;
     }
 
-    ~List() {
-        Node* temp;
-        while (headRef) {
-            temp = headRef;
-            headRef = headRef->next;
-            exit(temp->data);
-            delete temp;
-        }
-    }
 };
 
-int rtymain() {
+int gfhfgmain() {
     List* list = new List();
 
     for (int i = 1; i <= 5; ++i) list->append(i);
 
     list->display();
 
-    list->createSkip(4, 1);
+    list->createSkip(2, 4);
 
     cout << (list->hasLoops() ? "Yes" : "No") << endl;
 
     cout << (list->hasJumps() ? "Yes" : "No") << endl;
-    
+
     delete list;
     return 0;
 }

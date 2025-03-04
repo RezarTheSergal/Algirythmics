@@ -24,11 +24,12 @@ public:
 
         Node<T>* current = this->headRef;
         Node<T>* nextNode;
-        do {
+        while (current != nullptr) 
+        {
             nextNode = current->next;
             delete current;
             current = nextNode;
-        } while (current != nullptr);
+        }
     }
 
     void append(T new_data) 
@@ -53,18 +54,18 @@ public:
         return;
     }
 
-    void display() 
+    void display(bool fullDsp = true) 
     {
         if (this->headRef == nullptr)
         {
-            cout << "NULL";
+            cout << "NULL" << endl;
             return;
         }
         Node<T>* temp = this->headRef;
         bool nfirst = false;
         while (temp != NULL)
         {
-            if (nfirst)
+            if (nfirst || fullDsp)
             {
                 cout << temp->data << " ";
                 temp = temp->next;
@@ -72,6 +73,7 @@ public:
             else
             {
                 nfirst = true;
+                temp = temp->next;
             }
 
         }
@@ -135,15 +137,14 @@ void separateListByX(List<int>* base, int x, List<int>*& lower, List<int>*& grea
 }
 
 
-int asdmain()
+int dsfmain()
 {
     int x;
     cin >> x;
     List<int>* based = new List<int>();
     for (int i = 1; i < 10; i++)
     {
-        based->append(i-1);
-        based->append(10-i);
+        based->append((i % 2 != 0 ? i : 10-i));
     }
 
     List<int>* lowerValues = new List<int>();

@@ -97,7 +97,7 @@ public:
     }
 };
 
-int zxcmain() {
+int fxbmain() {
     CircularList* list = new CircularList();
 
     for (int i = 0; i < 4; i++) list->append(i);

@@ -2,45 +2,43 @@
 #include <string>
 #include <vector>
 
-// Структура для хранения информации о человеке
+using namespace std;
+
 class Person {
 public:
-    std::string name;
-    std::vector<std::string> phones;
+    string name;
+    vector<string> phones;
 
-    Person(const std::string& n) : name(n) {}
+    Person(const string n) : name(n) {}
 
-    void addPhone(const std::string& phone) {
+    void addPhone(const string phone) {
         phones.push_back(phone);
     }
 
-    void print() const {
-        std::cout << name << ": ";
+    void display() const {
+        cout << name << ": ";
         for (const auto& phone : phones) {
-            std::cout << phone << " ";
+            cout << phone << " ";
         }
-        std::cout << "\n";
+        cout << endl;
     }
 };
 
-// Узел двоичного дерева поиска
-struct TreeNode {
+struct Node {
     Person person;
-    TreeNode* left;
-    TreeNode* right;
+    Node* left = nullptr;
+    Node* right = nullptr;
 
-    TreeNode(const std::string& name) : person(name), left(nullptr), right(nullptr) {}
+    Node(const string name) : person(name) {}
 };
 
-// Класс для работы с телефонной книгой
 class PhoneBook {
 private:
-    TreeNode* root;
+    Node* root = nullptr;
 
-    // Рекурсивное добавление узла
-    TreeNode* insert(TreeNode* node, const std::string& name, const std::string& phone) {
+    Node* insert(Node* node, const string name, const string phone) {
         if (!node) {
-            TreeNode* newNode = new TreeNode(name);
+            Node* newNode = new Node(name);
             newNode->person.addPhone(phone);
             return newNode;
         }
@@ -51,16 +49,12 @@ private:
         else if (name > node->person.name) {
             node->right = insert(node->right, name, phone);
         }
-        else {
-            // Если имя уже существует, добавляем телефон
-            node->person.addPhone(phone);
-        }
 
+        node->person.addPhone(phone);
         return node;
     }
 
-    // Рекурсивный поиск узла по имени
-    TreeNode* search(TreeNode* node, const std::string& name) const {
+    Node* search(Node* node, const string name) const {
         if (!node || node->person.name == name) {
             return node;
         }
@@ -73,65 +67,57 @@ private:
         }
     }
 
-    // Рекурсивное удаление узла
-    TreeNode* remove(TreeNode* node, const std::string& name) {
+    Node* deleteNode(Node* node, const string name) {
         if (!node) return nullptr;
 
         if (name < node->person.name) {
-            node->left = remove(node->left, name);
+            node->left = deleteNode(node->left, name);
         }
         else if (name > node->person.name) {
-            node->right = remove(node->right, name);
-        }
-        else {
-            // Узел найден
-            if (!node->left && !node->right) {
-                // Нет детей
-                delete node;
-                return nullptr;
-            }
-            else if (!node->left) {
-                // Только правый ребёнок
-                TreeNode* temp = node->right;
-                delete node;
-                return temp;
-            }
-            else if (!node->right) {
-                // Только левый ребёнок
-                TreeNode* temp = node->left;
-                delete node;
-                return temp;
-            }
-            else {
-                // Два ребёнка: находим минимальный узел в правом поддереве
-                TreeNode* minNode = findMin(node->right);
-                node->person = minNode->person;
-                node->right = remove(node->right, minNode->person.name);
-            }
+            node->right = deleteNode(node->right, name);
         }
 
+        // Node found
+        if (!node->left && !node->right) {
+            // No children
+            delete node;
+            return nullptr;
+        }
+        else if (!node->left) {
+            // Only right child
+            Node* temp = node->right;
+            delete node;
+            return temp;
+        }
+        else if (!node->right) {
+            // Only left child
+            Node* temp = node->left;
+            delete node;
+            return temp;
+        }
+        // Two children
+        Node* minNode = findMin(node->right);
+        node->person = minNode->person;
+        node->right = deleteNode(node->right, minNode->person.name);
         return node;
     }
 
-    // Нахождение минимального узла в поддереве
-    TreeNode* findMin(TreeNode* node) const {
+    Node* findMin(Node* node) const {
         while (node && node->left) {
             node = node->left;
         }
         return node;
     }
 
-    // Рекурсивный вывод всех записей в отсортированном порядке
-    void inorder(TreeNode* node) const {
+    void inorder(Node* node) const {
         if (!node) return;
 
         inorder(node->left);
-        node->person.print();
+        node->person.display();
         inorder(node->right);
     }
 
-    // Рекурсивное удаление всего дерева
-    void clear(TreeNode* node) {
+    void clear(Node* node) {
         if (!node) return;
 
         clear(node->left);
@@ -140,37 +126,32 @@ private:
     }
 
 public:
-    PhoneBook() : root(nullptr) {}
 
     ~PhoneBook() {
         clear(root);
     }
 
-    // Добавление записи
-    void add(const std::string& name, const std::string& phone) {
+    void add(const string name, const string phone) {
         root = insert(root, name, phone);
     }
 
-    // Поиск телефонов по имени
-    void find(const std::string& name) const {
-        TreeNode* node = search(root, name);
+    void find(const string name) const {
+        Node* node = search(root, name);
         if (node) {
-            node->person.print();
+            node->person.display();
         }
         else {
-            std::cout << "Person not found.\n";
+            cout << "Person not found." << endl;
         }
     }
 
-    // Удаление записи по имени
-    void remove(const std::string& name) {
-        root = remove(root, name);
+    void deleteNode(const string name) {
+        root = deleteNode(root, name);
     }
 
-    // Вывод всех записей
-    void printAll() const {
+    void dispAll() const {
         if (!root) {
-            std::cout << "Phone book is empty.\n";
+            cout << "Phone book is empty." << endl;
         }
         else {
             inorder(root);
@@ -178,53 +159,53 @@ public:
     }
 };
 
-// Основное меню
+
 void displayMenu() {
-    std::cout << "\nPhone Book Menu:\n";
-    std::cout << "1. Add a new entry\n";
-    std::cout << "2. Find phones by name\n";
-    std::cout << "3. Remove an entry by name\n";
-    std::cout << "4. Print all entries\n";
-    std::cout << "5. Exit\n";
-    std::cout << "Choose an option: ";
+    cout << endl << "Phone Book Menu: " << endl;
+    cout << "1. Add a new entry" << endl;
+    cout << "2. Find phones by name" << endl;
+    cout << "3. Remove an entry by name" << endl;
+    cout << "4. Print all entries" << endl;
+    cout << "5. Exit" << endl;
+    cout << "Choose an option: ";
 }
 
-int main() {
+int qazmain() {
     PhoneBook phoneBook;
     int choice;
-    std::string name, phone;
+    string name, phone;
 
     while (true) {
         displayMenu();
-        std::cin >> choice;
-        std::cin.ignore(); // Игнорируем оставшийся символ новой строки
+        cin >> choice;
+        cin.ignore();
 
         switch (choice) {
         case 1:
-            std::cout << "Enter name: ";
-            std::getline(std::cin, name);
-            std::cout << "Enter phone: ";
-            std::getline(std::cin, phone);
+            cout << "Enter name: ";
+            getline(cin, name);
+            cout << "Enter phone: ";
+            getline(cin, phone);
             phoneBook.add(name, phone);
             break;
         case 2:
-            std::cout << "Enter name to search: ";
-            std::getline(std::cin, name);
+            cout << "Enter name to search: ";
+            getline(cin, name);
             phoneBook.find(name);
             break;
         case 3:
-            std::cout << "Enter name to remove: ";
-            std::getline(std::cin, name);
-            phoneBook.remove(name);
+            cout << "Enter name to remove: ";
+            getline(cin, name);
+            phoneBook.deleteNode(name);
             break;
         case 4:
-            phoneBook.printAll();
+            phoneBook.dispAll();
             break;
         case 5:
-            std::cout << "Exiting...\n";
+            cout << "Exiting." << endl;
             return 0;
         default:
-            std::cout << "Invalid choice. Try again.\n";
+            cout << "Invalid choice. Try again." << endl;
         }
     }
 

@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AVLTree.cpp" />
+    <ClCompile Include="BinaryBalanceTree.cpp" />
     <ClCompile Include="CDLList.cpp" />
     <ClCompile Include="CircularList.cpp" />
     <ClCompile Include="Hare.cpp" />
