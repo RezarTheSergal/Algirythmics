@@ -10,7 +10,7 @@ struct Node {
     Node(int value) : data(value) {}
 };
 
-class BinarySearchTree {
+class AVLTree {
 private:
     Node* root = nullptr;
 
@@ -99,7 +99,7 @@ private:
     }
 
 public:
-    ~BinarySearchTree() {
+    ~AVLTree() {
         clear(root);
     }
 
@@ -128,7 +128,7 @@ public:
 
 int gfhdsadsmain() {
     srand(time(0));
-    BinarySearchTree* bst = new BinarySearchTree();
+    AVLTree* bst = new AVLTree();
 
     int n;
     cout << "Enter number of tree's elements: ";

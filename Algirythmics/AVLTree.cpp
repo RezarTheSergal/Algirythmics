@@ -4,19 +4,16 @@ struct Node {
     int data;
     Node* left = nullptr;
     Node* right = nullptr;
-    Node* parent;
     int balanceFactor;
 
     Node(int value, int bf = 0, Node* p = nullptr)
-        : data(value), balanceFactor(bf), parent(p)
+        : data(value), balanceFactor(bf)
     {}
 };
 
-class BinarySearchTree {
+class AVLTree {
 private:
     Node* root = nullptr;
-
-
 
     void clear(Node* node) {
         if (!node) return;
@@ -26,20 +23,65 @@ private:
         delete node;
     }
 
-    Node* insert(Node* node, int value, Node* parent = nullptr) {
-        if (node == nullptr) {
-            Node* temp = new Node(value, 0, parent);
-            return temp;
+    Node* insert(Node* node, int& value) {
+        if (!node) {
+            return new Node(value, 0);
         }
         if (value < node->data) {
-            node->left = insert(node->left, value, node);
-            node->left->balanceFactor = height(node->left->left) - height(node->left->right);
+            node->left = insert(node->left, value);
         }
         else if (value > node->data) {
-            node->right = insert(node->right, value, node);
-            node->right->balanceFactor = height(node->right->left) - height(node->right->right);
+            node->right = insert(node->right, value);
         }
-        return node;
+        else
+        {
+            return node;
+        }
+
+        node->balanceFactor = balanceFactor(node);
+        return balanceTree(node, value);
+        
+    }
+
+    Node* deleteNode(Node* node, int& value)
+    {
+        if (!node) return node;
+
+        if (value < node->data)
+            node->left = deleteNode(node->left, value);
+        else if (value > node->data)
+            node->right = deleteNode(node->right, value);
+        else {
+            if ((!node->left) || (!node->right)) {
+                Node* temp = node->left ? node->left : node->right;
+                if (!temp) {
+                    temp = node;
+                    node = nullptr;
+                }
+                else
+                    *node = *temp;
+                delete temp;
+            }
+            else {
+
+                Node* temp = minValueNode(node->right);
+                node->data = temp->data;
+                node->right = deleteNode(node->right, temp->data);
+            }
+        }
+
+        if (!node) return node;
+
+        node->balanceFactor = balanceFactor(node);
+        return balanceDeletionTree(node);
+    }
+    
+    Node* minValueNode(Node* node)
+    {
+        Node* current = node;
+        while (current->left != nullptr)
+            current = current->left;
+        return current;
     }
 
     void inorderTraversal(Node* node) {
@@ -56,7 +98,7 @@ private:
         }
         int leftHeight = height(node->left);
         int rightHeight = height(node->right);
-        return std::max(leftHeight, rightHeight);
+        return std::max(leftHeight, rightHeight) + 1;
     }
 
     int balanceFactor(Node* node)
@@ -67,42 +109,93 @@ private:
         return height(node->left) - height(node->right);
     }
 
-    void balanceTree(Node* node) 
+    Node* balanceTree(Node* node, int& value) 
     {
-        if (node == nullptr) {
-            return;
+        // Left Left Case
+        if (node->balanceFactor > 1 && value < node->left->data)
+            return rightRotation(node);
+
+        // Right Right Case
+        if (node->balanceFactor < -1 && value > node->right->data)
+            return leftRotation(node);
+
+        // Left Right Case
+        if (node->balanceFactor > 1 && value > node->left->data) {
+            node->left = leftRotation(node->left);
+            return rightRotation(node);
         }
-        balanceTree(node->left);
+
+        // Right Right Case
+        if (node->balanceFactor < -1 && value < node->right->data) {
+            node->right = rightRotation(node->right);
+            return rightRotation(node);
+        }
+
+        return node;
     }
 
-    void rightRotation(Node* node, bool lr = false)
+    Node* balanceDeletionTree(Node* node)
     {
-        if (!lr) node->parent->left = node->left;
-        else node->parent->right = node->left;
+        // Left Left Case
+        if (node->balanceFactor > 1 && balanceFactor(node->left) >= 0)
+            return rightRotation(node);
 
-        Node* temp = node->left->right;
-        node->left->right = node;
-        node->left = temp;
+        // Right Right Case
+        if (node->balanceFactor < -1 && balanceFactor(node->right) <= 0)
+            return leftRotation(node);
+
+        // Left Right Case
+        if (node->balanceFactor > 1 && balanceFactor(node->left) < 0) {
+            root->left = leftRotation(node->left);
+            return rightRotation(node);
+        }
+
+        // Right Left Case
+        if (node->balanceFactor < -1
+            && balanceFactor(node->right) > 0) {
+            root->right = rightRotation(node->right);
+            return leftRotation(node);
+        }
+
+        return node;
     }
 
-    void leftRotation(Node* node, bool lr = false)
+    Node* rightRotation(Node* B)
     {
-        if (!lr) node->parent->left = node->right;
-        else node->parent->right = node->right;
+        Node* A = B->left;
+        Node* T2 = A->right;
 
-        Node* temp = node->right->left;
-        node->right->left = node;
-        node->right = temp;
+        A->right = B;
+        B->left = T2;
+
+        B->balanceFactor = balanceFactor(B);
+        A->balanceFactor = balanceFactor(A);
+
+        return A;
+
+    }
+
+    Node* leftRotation(Node* A)
+    {
+        Node* B = A->right;
+        Node* T2 = B->left;
+
+        B->left = A;
+        A->right = T2;
+
+        B->balanceFactor = balanceFactor(B);
+        A->balanceFactor = balanceFactor(A);
+
+        return B;
     }
 
 public:
-    ~BinarySearchTree() {
+    ~AVLTree() {
         clear(root);
     }
 
     void insert(int value) {
         root = insert(root, value);
-        balanceTree(nullptr);
     }
 
     // Симметричный обход
@@ -111,29 +204,46 @@ public:
         std::cout << std::endl;
     }
 
+    void remove(int value) 
+    {
+        root = deleteNode(root, value);
+    }
+
 };
 
 int main() {
-    BinarySearchTree* bst = new BinarySearchTree();
+    AVLTree* avl = new AVLTree();
 
-    bst->insert(3);
-    bst->insert(2);
-    bst->insert(4);
-    bst->insert(1);
-    bst->insert(5);
+    avl->insert(3);
+    avl->insert(2);
+    avl->insert(4);
+    avl->insert(1);
+    avl->insert(5);
 
     std::cout << "Inorder Traversal 1: ";
-    bst->inorderTraversal();
+    avl->inorderTraversal();
 
-    delete bst;
-    bst = new BinarySearchTree();
+    delete avl;
+    avl = new AVLTree();
 
-    bst->insert(1);
-    bst->insert(2);
-    bst->insert(3);
-    bst->insert(4);
-    bst->insert(5);
+    avl->insert(1);
+    avl->insert(2);
+    avl->insert(3);
+    avl->insert(4);
+    avl->insert(5);
+    avl->insert(6);
+    avl->insert(7);
+    avl->insert(8);
+    avl->insert(9);
+    avl->insert(10);
 
     std::cout << "Inorder Traversal 2: ";
-    bst->inorderTraversal();
+    avl->inorderTraversal();
+
+    avl->remove(5);
+    avl->remove(4);
+
+    std::cout << "Inorder Traversal 3: ";
+    avl->inorderTraversal();
+    return 0;
 }

@@ -9,7 +9,7 @@ struct Node {
     Node(int value) : data(value) {}
 };
 
-class BinarySearchTree {
+class AVLTree {
 private:
     Node* root = nullptr;
 
@@ -56,7 +56,7 @@ private:
     }
 
 public:
-    ~BinarySearchTree() {
+    ~AVLTree() {
         clear(root);
     }
 
@@ -76,8 +76,8 @@ public:
 
 };
 
-int main() {
-    BinarySearchTree* bst = new BinarySearchTree();
+int fghjmain() {
+    AVLTree* bst = new AVLTree();
 
     bst->insert(3);
     bst->insert(2);
@@ -89,7 +89,7 @@ int main() {
     bst->inorderTraversal();
 
     delete bst;
-    bst = new BinarySearchTree();
+    bst = new AVLTree();
     
     bst->insert(1);
     bst->insert(2);
@@ -99,4 +99,5 @@ int main() {
 
     std::cout << "Inorder Traversal 2: ";
     bst->inorderTraversal();
+    return 0;
 }
