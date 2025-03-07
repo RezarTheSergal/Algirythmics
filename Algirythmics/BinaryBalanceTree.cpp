@@ -9,7 +9,7 @@ struct Node {
     Node(int value) : data(value) {}
 };
 
-class AVLTree {
+class BinaryBalanceTree {
 private:
     Node* root = nullptr;
 
@@ -56,7 +56,7 @@ private:
     }
 
 public:
-    ~AVLTree() {
+    ~BinaryBalanceTree() {
         clear(root);
     }
 
@@ -77,7 +77,7 @@ public:
 };
 
 int fghjmain() {
-    AVLTree* bst = new AVLTree();
+    BinaryBalanceTree* bst = new BinaryBalanceTree();
 
     bst->insert(3);
     bst->insert(2);
@@ -89,7 +89,7 @@ int fghjmain() {
     bst->inorderTraversal();
 
     delete bst;
-    bst = new AVLTree();
+    bst = new BinaryBalanceTree();
     
     bst->insert(1);
     bst->insert(2);

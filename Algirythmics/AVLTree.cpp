@@ -211,7 +211,7 @@ public:
 
 };
 
-int main() {
+int sdffhgmain() {
     AVLTree* avl = new AVLTree();
 
     avl->insert(3);
@@ -239,6 +239,8 @@ int main() {
 
     std::cout << "Inorder Traversal 2: ";
     avl->inorderTraversal();
+
+    avl->insert(11);
 
     avl->remove(5);
     avl->remove(4);

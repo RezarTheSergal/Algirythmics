@@ -48,5 +48,14 @@
     <ClCompile Include="AVLTree.cpp">
       <Filter>Исходные файлы\Second</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryRBTree.cpp">
+      <Filter>Исходные файлы\Second</Filter>
+    </ClCompile>
+    <ClCompile Include="RBTree.cpp">
+      <Filter>Исходные файлы\Second</Filter>
+    </ClCompile>
+    <ClCompile Include="SplayTree.cpp">
+      <Filter>Исходные файлы\Second</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
